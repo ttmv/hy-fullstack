@@ -9,20 +9,19 @@ const Statistic = ({info, stat, lisa}) => <tr><td>{info}</td><td>{stat} {lisa}</
 const Statistics = ({hyva, huono, neutraali}) => {
   let keskiarvo = (hyva + huono*-1) / (hyva+huono+neutraali)
   let positiiviset = hyva / (hyva+huono+neutraali) * 100
+
+  if (hyva + huono + neutraali === 0) return <p>Yhtään palautetta ei ole annettu.</p>  
+
   return (
-    <div>
-      <h2>Statistiikka</h2>
-      <table>
-        <tbody>
-          <Statistic info="hyvä" stat={hyva} />
-          <Statistic info="neutraali" stat={neutraali} />
-          <Statistic info="huono" stat={huono} />    
-          <Statistic info="keskiarvo" stat={keskiarvo} />    
-          <Statistic info="positiivisia" stat={positiiviset} lisa="%"/>
-        </tbody>    
-      </table>
-      
-    </div>
+    <table>
+      <tbody>
+        <Statistic info="hyvä" stat={hyva} />
+        <Statistic info="neutraali" stat={neutraali} />
+        <Statistic info="huono" stat={huono} />    
+        <Statistic info="keskiarvo" stat={keskiarvo} />    
+        <Statistic info="positiivisia" stat={positiiviset} lisa="%"/>
+      </tbody>    
+    </table>
   )
 }
 
@@ -63,7 +62,8 @@ class App extends React.Component {
         <Button handleClick={this.lisaaHyva} text="hyvä"/>
         <Button handleClick={this.lisaaNeutraali} text="neutraali"/>
         <Button handleClick={this.lisaaHuono} text="huono"/>
-        
+
+        <h2>Statistiikka</h2>
         <Statistics hyva={this.state.hyva} huono={this.state.huono} neutraali={this.state.neutraali} />
       </div>
     )
