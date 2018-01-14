@@ -1,18 +1,22 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+
+
 const Otsikko = (props) => {
   return (
     <h1>{props.kurssi}</h1>
   )
 }
 
+const Osa = (props) =>  <p>{props.nimi} {props.tehtavia}</p>
+
 const Sisalto = (props) => {
   return (
     <div>
-      <p>{props.osa1} {props.tehtavia1}</p>
-      <p>{props.osa2} {props.tehtavia2}</p>
-      <p>{props.osa3} {props.tehtavia3}</p>    
+      <Osa nimi={props.osa1} tehtavia={props.tehtavia1} />
+      <Osa nimi={props.osa2} tehtavia={props.tehtavia2} />
+      <Osa nimi={props.osa3} tehtavia={props.tehtavia3} />
     </div>
   )
 }
