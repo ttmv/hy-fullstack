@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 
-const Statistic = ({info, stat, lisa}) => <p>{info}: {stat} {lisa}</p>
+const Statistic = ({info, stat, lisa}) => <tr><td>{info}</td><td>{stat} {lisa}</td></tr>
 
 
 const Statistics = ({hyva, huono, neutraali}) => {
@@ -12,13 +12,15 @@ const Statistics = ({hyva, huono, neutraali}) => {
   return (
     <div>
       <h2>Statistiikka</h2>
-      <div>
-        <Statistic info="hyvä" stat={hyva} />
-        <Statistic info="neutraali" stat={neutraali} />
-        <Statistic info="huono" stat={huono} />    
-        <Statistic info="keskiarvo" stat={keskiarvo} />    
-        <Statistic info="positiivisia" stat={positiiviset} lisa="%"/>    
-      </div>
+      <table>
+        <tbody>
+          <Statistic info="hyvä" stat={hyva} />
+          <Statistic info="neutraali" stat={neutraali} />
+          <Statistic info="huono" stat={huono} />    
+          <Statistic info="keskiarvo" stat={keskiarvo} />    
+          <Statistic info="positiivisia" stat={positiiviset} lisa="%"/>
+        </tbody>    
+      </table>
       
     </div>
   )
