@@ -1,9 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+
 const Anecdote = ({anecdote}) => <p>{ anecdote }</p>
 const Votes = ({votes, selected}) => <p>has {votes[selected] || 0} votes </p>
 const Button = ({handleClick, text}) =>  <button onClick={handleClick}>{text}</button>
+const MostVoted = ({anecdotes, mostVoted}) => {
+  if (mostVoted < 0) return (<div></div>)
+
+  return (
+    <div>
+      <h2>Anecdote with most votes:</h2>
+      <p>{anecdotes[mostVoted]}</p>
+    </div>
+  )
+}
+
 
 class App extends React.Component {
   constructor(props) {
@@ -11,6 +23,7 @@ class App extends React.Component {
     this.state = {
       selected: 0,
       votes: [],
+      mostVoted: -1
     }
   }
 
@@ -25,9 +38,23 @@ class App extends React.Component {
     if(votes[this.state.selected]) votes[this.state.selected]++
     else votes[this.state.selected] = 1
 
+    this.updateMostVoted(votes)
     this.setState({ votes: votes })
   }
   
+  updateMostVoted = (votes) => {
+    //eniten ääniä tai eka niistä joilla yhtä paljon
+    let ind = -1;
+    let maxVotes = 0;
+    for (let i = 0; i<votes.length; i++) {
+      if (votes[i] && votes[i] > maxVotes) {
+        ind = i;
+        maxVotes = votes[i]
+      }
+    }
+    
+    if (ind>-1 && ind!==this.state.mostVoted) this.setState({ mostVoted: ind }) 
+  }
 
   render() {
     return (
@@ -36,6 +63,7 @@ class App extends React.Component {
         <Votes votes={this.state.votes} selected={this.state.selected} />
         <Button handleClick={this.voteSelected} text="vote" />
         <Button handleClick={this.changeAnecdote} text="next anecdote" />
+        <MostVoted anecdotes={this.props.anecdotes} mostVoted={this.state.mostVoted} />
       </div>
     )
   }
