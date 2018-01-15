@@ -1,23 +1,41 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+const Anecdote = ({anecdote}) => <p>{ anecdote }</p>
+const Votes = ({votes, selected}) => <p>has {votes[selected] || 0} votes </p>
+const Button = ({handleClick, text}) =>  <button onClick={handleClick}>{text}</button>
+
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selected: 0
+      selected: 0,
+      votes: [],
     }
   }
 
   changeAnecdote = () => {
+    console.log(this.state.selected)
     this.setState({ selected: Math.floor(Math.random()*this.props.anecdotes.length) })
   }
+
+  voteSelected = () => {
+    console.log(this.state.votes)    
+    let votes = this.state.votes.slice()
+    if(votes[this.state.selected]) votes[this.state.selected]++
+    else votes[this.state.selected] = 1
+
+    this.setState({ votes: votes })
+  }
+  
 
   render() {
     return (
       <div>
-        {this.props.anecdotes[this.state.selected]} <br/>
-        <button onClick={this.changeAnecdote}>next anecdote</button>
+        <Anecdote anecdote={this.props.anecdotes[this.state.selected]} />
+        <Votes votes={this.state.votes} selected={this.state.selected} />
+        <Button handleClick={this.voteSelected} text="vote" />
+        <Button handleClick={this.changeAnecdote} text="next anecdote" />
       </div>
     )
   }
