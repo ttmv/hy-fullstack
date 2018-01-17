@@ -2,16 +2,15 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 
-
-const Otsikko = ({nimi}) => {
+const Otsikko = ({ nimi }) => {
   return (
     <h1>{nimi}</h1>
   )
 }
 
-const Osa = ({osa}) =>  <p>{osa.nimi} {osa.tehtavia}</p>
+const Osa = ({ osa }) =>  <p>{osa.nimi} {osa.tehtavia}</p>
 
-const Sisalto = ({osat}) => {
+const Sisalto = ({ osat }) => {
   return (
     <div>
       {osat.map(osa => <Osa key={osa.id} osa={osa} />)}
@@ -19,9 +18,12 @@ const Sisalto = ({osat}) => {
   )
 }
 
-const Yhteensa = (props) => {
+const Yhteensa = ({ osat }) => {
+  const tehtavat = osat.map(osa => osa.tehtavia)
+  const yht = tehtavat.reduce((acc, curr) => acc + curr)
+  
   return (
-    <p></p>
+    <p>yhteensä {yht} tehtävää.</p>
   )
 }
 
@@ -30,7 +32,7 @@ const Kurssi = ({ kurssi }) => {
     <div>
       <Otsikko nimi={kurssi.nimi} />
       <Sisalto osat={kurssi.osat} />
-      <Yhteensa kurssi={kurssi} />
+      <Yhteensa osat={kurssi.osat} />
     </div>
   )
 }
@@ -53,7 +55,13 @@ const App = () => {
         nimi: 'Komponenttien tila',
         tehtavia: 14,
         id: 3
+      },
+      {
+        nimi: 'Redux',
+        tehtavia: 7,
+        id: 4
       }
+
     ]
   }
 
