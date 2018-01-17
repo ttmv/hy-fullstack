@@ -1,43 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import App from './App'
 
 
-const Otsikko = ({ nimi }) => {
-  return (
-    <h1>{nimi}</h1>
-  )
-}
-
-const Osa = ({ osa }) =>  <p>{osa.nimi} {osa.tehtavia}</p>
-
-const Sisalto = ({ osat }) => {
-  return (
-    <div>
-      {osat.map(osa => <Osa key={osa.id} osa={osa} />)}
-    </div>
-  )
-}
-
-const Yhteensa = ({ osat }) => {
-  const tehtavat = osat.map(osa => osa.tehtavia)
-  const yht = tehtavat.reduce((acc, curr) => acc + curr)
-  
-  return (
-    <p>yhteensä {yht} tehtävää.</p>
-  )
-}
-
-const Kurssi = ({ kurssi }) => {
-  return (
-    <div>
-      <Otsikko nimi={kurssi.nimi} />
-      <Sisalto osat={kurssi.osat} />
-      <Yhteensa osat={kurssi.osat} />
-    </div>
-  )
-}
-
-const App = () => {
   const kurssit = [
     {
       nimi: 'Half Stack -sovelluskehitys',
@@ -78,16 +43,10 @@ const App = () => {
     }
   ]
 
-  return (
-    <div>
-      <Otsikko nimi="Opetusohjelma" />
-      {kurssit.map(kurssi=> <Kurssi key={kurssi.id} kurssi={kurssi} />)}
-    </div>
-  )
-}
+
 
 ReactDOM.render(
-  <App />,
+  <App kurssit={kurssit}/>,
   document.getElementById('root')
 )
 
