@@ -1,24 +1,23 @@
 import React from 'react';
 
+const Input = (props) => 
+  <div>
+    <label htmlFor={props.id}>{props.text}</label> 
+    <input 
+      type="text" id={props.id} 
+      value={props.value} 
+      onChange={props.handleChange} />
+  </div>
+
 const Form = (props) => 
   <form onSubmit={props.handleSubmit}>
+    <Input id="name" text="Nimi" value={props.newName} handleChange={props.handleNameChange} />
+    <Input id="num" text="Numero" value={props.newNum} handleChange={props.handleNumChange} />
+
     <div>
-      <label htmlFor="name">Nimi</label> 
-      <input 
-        type="text" id="name" 
-        value={props.newName} 
-        onChange={props.handleNameChange}/>
-      <br />
-      <label htmlFor="num">Numero</label>  
-      <input 
-        type="text" id="num" 
-        value={props.newNum} 
-        onChange={props.handleNumChange}/>
+      <button type="submit">lisää</button>
     </div>
-    <div>
-    <button type="submit">lisää</button>
-  </div>
-</form>
+  </form>
 
 const Header = ({text}) => <h2>{text}</h2>
 
@@ -33,11 +32,24 @@ class App extends React.Component {
     super(props)
     this.state = {
       persons: [
-        { name: 'Nimi 1', id: 'Nimi 1', number: '000' }
+        { name: 'Testi Henkilö', id: 'Testi Henkilö', number: '010' },
+        { name: 'Joku Muu', id: 'Joku Muu', number: '040-2003000' },
+        { name: 'Kolmas Hlö', id: 'Kolmas Hlö', number: '050-660000' },
+        { name: 'Neljäs Hlö', id: 'Neljäs Hlö', number: '050-0000' }
       ],
       newName: '',
-      newNum: ''
+      newNum: '',
+      filter: '',
+      filtered: []
     }
+  }
+
+  filterPersons = (event) => {
+    this.setState({filter: event.target.value})
+    const filtered = this.state.persons.filter(p => 
+      p.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1)
+    console.log(filtered)
+    this.setState({filtered})
   }
 
   addPerson = (event) => {
@@ -66,9 +78,13 @@ class App extends React.Component {
   }
 
   render() {
+    const personList = this.state.filter.length > 0 ? this.state.filtered : this.state.persons
+
     return (
       <div>
         <Header text="Puhelinluettelo" />
+        <Input id="filter" text="Rajaa" value={this.state.filter} handleChange={this.filterPersons} />
+
         <Header text="Lisää uusi" />
         <Form 
           handleSubmit={this.addPerson} 
@@ -78,7 +94,7 @@ class App extends React.Component {
           newNum={this.state.newNum}
         />
         <Header text="Numerot" />
-        <Persons persons={this.state.persons} />      
+        <Persons persons={personList} />      
       </div>
     )
   }
