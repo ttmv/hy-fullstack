@@ -5,9 +5,10 @@ class App extends React.Component {
     super(props)
     this.state = {
       persons: [
-        { name: 'Nimi 1', id: 'Nimi 1' }
+        { name: 'Nimi 1', id: 'Nimi 1', number: '000' }
       ],
-      newName: ''
+      newName: '',
+      newNum: ''
     }
   }
 
@@ -15,6 +16,7 @@ class App extends React.Component {
     event.preventDefault()
     const personObj = {
       name: this.state.newName,
+      number: this.state.newNum,
       id: this.state.newName
     } 
 
@@ -22,14 +24,17 @@ class App extends React.Component {
       alert(personObj.name + " on jo luettelossa.")
       return
     }
-    const persons = this.state.persons.concat(personObj)
 
-    this.setState({persons: persons, newName: ''})    
+    const persons = this.state.persons.concat(personObj)
+    this.setState({persons, newName: ''})    
   }
 
-  handleChange = (event) => {
-    console.log(event.target)
+  handleNameChange = (event) => {
     this.setState({newName: event.target.value})
+  }
+
+  handleNumChange = (event) => {
+    this.setState({newNum: event.target.value})
   }
 
   render() {
@@ -42,7 +47,14 @@ class App extends React.Component {
             <input 
               type="text" id="name" 
               value={this.state.newName} 
-              onChange={this.handleChange}/>
+              onChange={this.handleNameChange}/>
+            <br />
+            <label htmlFor="num">Numero</label>  
+            <input 
+              type="text" id="num" 
+              value={this.state.newNum} 
+              onChange={this.handleNumChange}/>
+
           </div>
           <div>
             <button type="submit">lisää</button>
@@ -50,7 +62,7 @@ class App extends React.Component {
         </form>
         <h2>Numerot</h2>
         <div>
-          {this.state.persons.map(p => <p key={p.id}>{p.name}</p>)}
+          {this.state.persons.map(p => <p key={p.id}>{p.name} {p.number}</p>)}
         </div>
       
       </div>
