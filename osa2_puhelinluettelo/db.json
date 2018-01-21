@@ -19,6 +19,31 @@
       "name": "Lea Kutvonen",
       "number": "040-123456",
       "id": 4
+    },
+    {
+      "name": "Joku",
+      "number": "666",
+      "id": "Joku"
+    },
+    {
+      "name": "joku muu",
+      "number": "765432",
+      "id": "joku muu"
+    },
+    {
+      "name": "Vielä Yks",
+      "number": "123456",
+      "id": 5
+    },
+    {
+      "name": "Uusi Henkilö",
+      "number": "192837193",
+      "id": 6
+    },
+    {
+      "name": "asd argh",
+      "number": "102938091238",
+      "id": 7
     }
   ]
 }

@@ -1,5 +1,6 @@
 import React from 'react';
-import axios from 'axios';
+import personService from './services/persons'
+//import axios from 'axios';
 
 const Input = (props) => 
   <div>
@@ -41,11 +42,10 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log(response)
-        const persons = response.data
+    personService
+      .getAll()
+      .then(persons => {
+        console.log(persons)
         this.setState({persons})
       })
   }
@@ -63,16 +63,21 @@ class App extends React.Component {
     const personObj = {
       name: this.state.newName,
       number: this.state.newNum,
-      id: this.state.newName
+      //id: this.state.newName
     } 
 
-    if (this.state.persons.find(p => p.id === personObj.id)) {
+    if (this.state.persons.find(p => p.name === personObj.name)) {
       alert(personObj.name + " on jo luettelossa.")
       return
     }
 
-    const persons = this.state.persons.concat(personObj)
-    this.setState({persons, newName: '', newNum: ''})    
+    personService
+      .create(personObj)
+      .then(p => {
+        console.log(p)
+        const persons = this.state.persons.concat(p)
+        this.setState({persons, newName: '', newNum: ''})
+      })
   }
 
   handleNameChange = (event) => {
