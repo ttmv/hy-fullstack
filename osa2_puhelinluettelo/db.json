@@ -22,8 +22,13 @@
     },
     {
       "name": "Uusi Henkilö",
-      "number": "192837193",
+      "number": "12345",
       "id": 6
+    },
+    {
+      "name": "Asdf Argh",
+      "number": "123123",
+      "id": 8
     }
   ]
 }

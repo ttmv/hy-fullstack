@@ -10,6 +10,7 @@ const Input = (props) =>
       onChange={props.handleChange} />
   </div>
 
+
 const Form = (props) => 
   <form onSubmit={props.handleSubmit}>
     <Input id="name" text="Nimi" value={props.newName} handleChange={props.handleNameChange} />
@@ -75,29 +76,33 @@ class App extends React.Component {
       //id: this.state.newName
     } 
 
-    if (this.state.persons.find(p => p.name === personObj.name)) {
-      alert(personObj.name + " on jo luettelossa.")
-      return
-    }
+    const old = this.state.persons.find(p => p.name === personObj.name)
 
-    personService
+    if (old) {
+      if (!window.confirm(old.name + " on jo luettelossa, korvataanko vanha numero?")) {
+        this.setState({newName: '', newNum: ''})
+        return
+      } 
+
+      personService
+        .update(old.id, personObj)
+        .then(resp => {
+          const persons = this.state.persons.filter(p => p.id !== old.id).concat(resp)
+          this.setState({persons, newName: '', newNum: ''})
+        })
+
+    } else {
+      personService
       .create(personObj)
       .then(p => {
         console.log(p)
         const persons = this.state.persons.concat(p)
         this.setState({persons, newName: '', newNum: ''})
       })
+    }
   }
 
-  handleNameChange = (event) => {
-    this.setState({newName: event.target.value})
-  }
-
-  handleNumChange = (event) => {
-    this.setState({newNum: event.target.value})
-  }
-
-  remove = (id) => {
+  removePerson = (id) => {
     return () => {
       const p = this.state.persons.find(p => p.id === id)
 
@@ -109,6 +114,14 @@ class App extends React.Component {
         })        
       }
     }
+  }
+
+  handleNameChange = (event) => {
+    this.setState({newName: event.target.value})
+  }
+
+  handleNumChange = (event) => {
+    this.setState({newNum: event.target.value})
   }
 
   render() {
@@ -128,7 +141,7 @@ class App extends React.Component {
           newNum={this.state.newNum}
         />
         <Header text="Numerot" />
-        <Persons persons={personList} remove={this.remove}/>      
+        <Persons persons={personList} remove={this.removePerson}/>      
       </div>
     )
   }
