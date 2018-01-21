@@ -24,7 +24,7 @@ const Form = (props) =>
 const Header = ({text}) => <h2>{text}</h2>
 
 const Person = ({person, remove}) => 
-  <tr>
+  <tr className="note">
     <td>{person.name}</td> 
     <td>{person.number}</td>
     <td><button onClick={remove}>poista</button></td>
@@ -39,6 +39,16 @@ const Persons = ({persons, remove}) =>
   </table>
 
 
+const Notification = ({msg}) => {
+  if (msg === '') return null
+  return (
+    <div className="notification">
+      {msg}
+    </div>
+  )
+}
+
+
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -47,7 +57,8 @@ class App extends React.Component {
       newName: '',
       newNum: '',
       filter: '',
-      filtered: []
+      filtered: [],
+      msg: ''
     }
   }
 
@@ -89,6 +100,7 @@ class App extends React.Component {
         .then(resp => {
           const persons = this.state.persons.filter(p => p.id !== old.id).concat(resp)
           this.setState({persons, newName: '', newNum: ''})
+          this.notify(`numero muutettu`)
         })
 
     } else {
@@ -98,6 +110,7 @@ class App extends React.Component {
         console.log(p)
         const persons = this.state.persons.concat(p)
         this.setState({persons, newName: '', newNum: ''})
+        this.notify(`${p.name}' lisätty`)
       })
     }
   }
@@ -111,9 +124,17 @@ class App extends React.Component {
           console.log(response)
           const persons = this.state.persons.filter(p => p.id !== id)
           this.setState({persons})
+          this.notify(`${p.name}' poistettu`)
         })        
       }
     }
+  }
+
+  notify = (msg) => {
+    this.setState({msg})
+    setTimeout(() => {
+      this.setState({msg: ''})
+    }, 4000)
   }
 
   handleNameChange = (event) => {
@@ -130,6 +151,7 @@ class App extends React.Component {
     return (
       <div>
         <Header text="Puhelinluettelo" />
+        <Notification msg={this.state.msg} />
         <Input id="filter" text="Rajaa" value={this.state.filter} handleChange={this.filterPersons} />
 
         <Header text="Lisää uusi" />
