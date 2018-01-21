@@ -66,7 +66,7 @@ class App extends React.Component {
     personService
       .getAll()
       .then(persons => {
-        console.log(persons)
+        //console.log(persons)
         this.setState({persons})
       })
   }
@@ -75,7 +75,7 @@ class App extends React.Component {
     this.setState({filter: event.target.value})
     const filtered = this.state.persons.filter(p => 
       p.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1)
-    console.log(filtered)
+    //console.log(filtered)
     this.setState({filtered})
   }
 
@@ -95,24 +95,35 @@ class App extends React.Component {
         return
       } 
 
-      personService
-        .update(old.id, personObj)
-        .then(resp => {
-          const persons = this.state.persons.filter(p => p.id !== old.id).concat(resp)
-          this.setState({persons, newName: '', newNum: ''})
-          this.notify(`numero muutettu`)
-        })
+      this.updataPerson(old.id, personObj)
 
     } else {
-      personService
-      .create(personObj)
-      .then(p => {
-        console.log(p)
-        const persons = this.state.persons.concat(p)
-        this.setState({persons, newName: '', newNum: ''})
-        this.notify(`${p.name}' lisätty`)
-      })
+      this.addNewPerson(personObj)
     }
+  }
+
+  updataPerson = (id, personObj) => {
+    personService
+    .update(id, personObj)
+    .then(resp => {
+      const persons = this.state.persons.filter(p => p.id !== id).concat(resp)
+      this.setState({persons, newName: '', newNum: ''})
+      this.notify(`numero muutettu`)
+    }).catch(error => {
+      this.setState({ persons: this.state.persons.filter(p => p.id !== id) }) 
+      this.addNewPerson(personObj)
+    })  
+  }
+
+  addNewPerson = (personObj) => {
+    personService
+    .create(personObj)
+    .then(p => {
+      console.log(p)
+      const persons = this.state.persons.concat(p)
+      this.setState({persons, newName: '', newNum: ''})
+      this.notify(`${p.name}' lisätty`)
+    })
   }
 
   removePerson = (id) => {
@@ -123,8 +134,10 @@ class App extends React.Component {
         personService.remove(id).then(response=>{
           console.log(response)
           const persons = this.state.persons.filter(p => p.id !== id)
-          this.setState({persons})
+          this.setState({ persons })
           this.notify(`${p.name}' poistettu`)
+        }).catch(error => {          
+          this.setState({ persons: this.state.persons.filter(p => p.id !== id) })
         })        
       }
     }
