@@ -1,6 +1,5 @@
 import React from 'react';
 import personService from './services/persons'
-//import axios from 'axios';
 
 const Input = (props) => 
   <div>
@@ -23,10 +22,20 @@ const Form = (props) =>
 
 const Header = ({text}) => <h2>{text}</h2>
 
-const Persons = ({persons}) => 
-  <div>
-    {persons.map(p => <p key={p.id}>{p.name} {p.number}</p>)}
-  </div>
+const Person = ({person, remove}) => 
+  <tr>
+    <td>{person.name}</td> 
+    <td>{person.number}</td>
+    <td><button onClick={remove}>poista</button></td>
+  </tr>
+
+const Persons = ({persons, remove}) => 
+  <table>
+    <tbody>
+      { persons.map(p => 
+        <Person key={p.id} person={p} remove={remove(p.id)}/>) }
+    </tbody>
+  </table>
 
 
 class App extends React.Component {
@@ -88,6 +97,20 @@ class App extends React.Component {
     this.setState({newNum: event.target.value})
   }
 
+  remove = (id) => {
+    return () => {
+      const p = this.state.persons.find(p => p.id === id)
+
+      if (window.confirm("Poistetaanko " + p.name + "?")) {
+        personService.remove(id).then(response=>{
+          console.log(response)
+          const persons = this.state.persons.filter(p => p.id !== id)
+          this.setState({persons})
+        })        
+      }
+    }
+  }
+
   render() {
     const personList = this.state.filter.length > 0 ? this.state.filtered : this.state.persons
 
@@ -105,7 +128,7 @@ class App extends React.Component {
           newNum={this.state.newNum}
         />
         <Header text="Numerot" />
-        <Persons persons={personList} />      
+        <Persons persons={personList} remove={this.remove}/>      
       </div>
     )
   }
