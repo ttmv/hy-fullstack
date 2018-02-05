@@ -35,6 +35,18 @@ const blogs = [
   }
 ]
 
+const listWithOneBlog = [
+  {
+    _id: '5a422aa71b54a676234d17f8',
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 5,
+    __v: 0
+  }
+]
+
+
 
 test('dummy is called', () => {
   const blogs = []
@@ -44,16 +56,6 @@ test('dummy is called', () => {
 })
 
 describe('total likes', () => {
-  const listWithOneBlog = [
-    {
-      _id: '5a422aa71b54a676234d17f8',
-      title: 'Go To Statement Considered Harmful',
-      author: 'Edsger W. Dijkstra',
-      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-      likes: 5,
-      __v: 0
-    }
-  ]
 
   test('when list is empty equals 0', () => {
     const result = listHelper.totalLikes([])
@@ -68,5 +70,35 @@ describe('total likes', () => {
   test('when list has several blogs equals ', () => {
     const result = listHelper.totalLikes(blogs)
     expect(result).toBe(34)
+  })
+
+})
+
+describe('favorite blog', () => {
+  const mostLiked = {
+    title: "Canonical string reduction",
+    author: "Edsger W. Dijkstra",
+    likes: 12,
+  }
+
+  const mostLikedOnly = {
+    title: listWithOneBlog[0].title,
+    author: listWithOneBlog[0].author,
+    likes: listWithOneBlog[0].likes
+  } 
+  
+  test('when list is empty returns falsy', () => {
+    const result = listHelper.favoriteBlog([])
+    expect(result).toBeFalsy()
+  })
+
+  test('when list has only one blog equals that blog', () => {
+    const result = listHelper.favoriteBlog(listWithOneBlog)
+    expect(result).toEqual(mostLikedOnly)
+  })
+
+  test('when list has several blogs equals blog with most likes', () => {
+    const result = listHelper.favoriteBlog(blogs)
+    expect(result).toEqual(mostLiked)
   })
 })
