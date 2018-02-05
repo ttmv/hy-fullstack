@@ -16,7 +16,6 @@ const favoriteBlog = (blogs) => {
   let maxLikes = -1
   blogs.forEach(element => {
     if (element.likes > maxLikes) {
-      //favBlog = Object.assign({}, element)
       favBlog = {title: element.title, author: element.author, likes: element.likes}
       maxLikes = element.likes
     }
