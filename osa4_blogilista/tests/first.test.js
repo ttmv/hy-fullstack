@@ -32,7 +32,23 @@ const blogs = [
     url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
     likes: 10,
     __v: 0
-  }
+  },
+  {
+    _id: "5a422ba71b54a676234d17fb",
+    title: "TDD harms architecture",
+    author: "Robert C. Martin",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+    likes: 0,
+    __v: 0
+  },
+  {
+    _id: "5a422bc61b54a676234d17fc",
+    title: "Type wars",
+    author: "Robert C. Martin",
+    url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+    likes: 2,
+    __v: 0
+  }  
 ]
 
 const listWithOneBlog = [
@@ -69,7 +85,7 @@ describe('total likes', () => {
 
   test('when list has several blogs equals ', () => {
     const result = listHelper.totalLikes(blogs)
-    expect(result).toBe(34)
+    expect(result).toBe(36)
   })
 
 })
@@ -100,5 +116,31 @@ describe('favorite blog', () => {
   test('when list has several blogs equals blog with most likes', () => {
     const result = listHelper.favoriteBlog(blogs)
     expect(result).toEqual(mostLiked)
+  })
+})
+
+describe('most blogs', () => {
+  test('when list has several blogs returns the author with most blogs', () => {
+    const expRes = {
+      author: "Robert C. Martin",
+      blogs: 3
+    }
+    
+    const result = listHelper.mostBlogs(blogs)
+
+    expect(result).toEqual(expRes)
+  })
+})
+
+describe('most likes', () => {
+  test('when list has several blogs returns the author with most likes', () => {
+    const expRes = {
+      author: "Edsger W. Dijkstra",
+      votes: 17
+    }
+    
+    const result = listHelper.mostLikes(blogs)
+
+    expect(result).toEqual(expRes)
   })
 })

@@ -24,8 +24,37 @@ const favoriteBlog = (blogs) => {
   return favBlog  
 }
 
+const mostBlogs = (blogs) => {
+  let authors = {}
+  blogs.forEach(elem => {
+    let author = elem.author
+    authors[author] = !authors[author] ? 1 : authors[author] + 1
+  })
+
+  const maxVal = Math.max(...Object.values(authors))
+  const author = Object.keys(authors).find(key => authors[key] === maxVal)
+
+  return {author: author, blogs: maxVal}
+}
+
+const mostLikes = (blogs) => {
+  let authors = {}
+  blogs.forEach(elem => {
+    let author = elem.author
+    authors[author] = !authors[author] ? elem.likes : authors[author] + elem.likes
+  })
+
+  const maxVal = Math.max(...Object.values(authors))
+  const author = Object.keys(authors).find(key => authors[key] === maxVal)
+
+  return {author: author, votes: maxVal}
+}
+
+
 module.exports = {
   dummy, 
   totalLikes, 
-  favoriteBlog
+  favoriteBlog, 
+  mostBlogs, 
+  mostLikes
 }
