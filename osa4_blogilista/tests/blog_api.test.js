@@ -43,6 +43,19 @@ test('all blogs are returned', async () => {
   expect(resp.body.length).toBe(initialBlogs.length)
 })
 
+test('a blog can be deleted', async () => {
+  const newBlog = {
+    title: "Blog to delete",
+    author: "Author",
+    url: "http://blog.com",
+  }
+
+  const blogToDelete = await api.post('/api/blogs').send(newBlog)
+  const blogsBeforeDelete = await api.get('/api/blogs')
+  await api.delete(`/api/blogs/${blogToDelete.body._id}`).expect(204)
+})
+
+
 describe('Adding new blogs', () => {
   test('a new blog can be added', async () => {
     const newBlog = {
@@ -92,11 +105,15 @@ describe('Adding new blogs', () => {
       .post('/api/blogs')
       .send(newBlog)
       .expect(400)
+
+    const allBlogs = await api.get('/api/blogs/')
+    const authors = allBlogs.body.map(b => b.author)
+    expect(authors).not.toContain("Blogger without url")
   })
 
   test('blog without title is not added', async () => {
     const newBlog = {
-      author: "Blogger withouticom titles",
+      author: "Blogger without titles",
       url: "http://nonexistent.blog.com/"
     }
 
@@ -104,8 +121,14 @@ describe('Adding new blogs', () => {
       .post('/api/blogs')
       .send(newBlog)
       .expect(400)
+
+    const allBlogs = await api.get('/api/blogs/')
+    const authors = allBlogs.body.map(b => b.author)
+    expect(authors).not.toContain("Blogger without titles")
   })
 })
+
+
 
 afterAll(() => {
   server.close()

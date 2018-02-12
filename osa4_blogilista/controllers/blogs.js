@@ -14,10 +14,20 @@ blogsRouter.post('/', async (request, response) => {
   if(!request.body.likes) {
     request.body.likes = 0
   }
-  
+
   const blog = new Blog(request.body)
   const saved = await blog.save()
   response.status(201).json(saved)
 })
   
+blogsRouter.delete('/:id', async (request, response) => {
+  try {
+    await Blog.findByIdAndRemove(request.params.id)
+    response.status(204).end()
+  } catch(e) {
+    console.log(e)
+    response.status(400).send({ error: 'malformatted id' })
+  }
+})
+
 module.exports = blogsRouter 
