@@ -43,23 +43,44 @@ test('all blogs are returned', async () => {
   expect(resp.body.length).toBe(initialBlogs.length)
 })
 
-test('a new blog can be added', async () => {
-  const newBlog = {
-    title: "Type wars",
-    author: "Robert C. Martin",
-    url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html"
-  }
+describe('Adding new blogs', () => {
+  test('a new blog can be added', async () => {
+    const newBlog = {
+      title: "Type wars",
+      author: "Robert C. Martin",
+      url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+      likes: 2
+    }
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
   
-  const resp = await api.get('/api/blogs')
-  expect(resp.body.length).toBe(initialBlogs.length + 1)
-  const blogTitles = resp.body.map(b => b.title)
-  expect(blogTitles).toContain("Type wars")
+    const resp = await api.get('/api/blogs')
+    expect(resp.body.length).toBe(initialBlogs.length + 1)
+    const blogTitles = resp.body.map(b => b.title)
+    expect(blogTitles).toContain("Type wars")
+  })
+
+  test('when likes is not given it is set to 0', async () => {
+    const newBlog = {
+      title: "First class tests",
+      author: "Robert C. Martin",
+      url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll"
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+  
+    const resp = await api.get('/api/blogs')
+    const added = resp.body.find(b => b.title === newBlog.title)
+    expect(added.likes).toBe(0)
+  })
 })
 
 afterAll(() => {
