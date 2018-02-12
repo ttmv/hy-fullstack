@@ -81,6 +81,30 @@ describe('Adding new blogs', () => {
     const added = resp.body.find(b => b.title === newBlog.title)
     expect(added.likes).toBe(0)
   })
+
+  test('blog without url is not added', async () => {
+    const newBlog = {
+      title: "Blog without url",
+      author: "Blogger without url",
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
+  test('blog without title is not added', async () => {
+    const newBlog = {
+      author: "Blogger withouticom titles",
+      url: "http://nonexistent.blog.com/"
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
 })
 
 afterAll(() => {
