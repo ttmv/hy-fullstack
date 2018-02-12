@@ -2,6 +2,7 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Toinen Blogi",
-    "author": "A"
+    "title": "Kolmas Blogi",
+    "author": "Joku",
+    "url": "http://url.com"
 }
