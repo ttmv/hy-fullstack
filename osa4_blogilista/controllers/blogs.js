@@ -20,6 +20,7 @@ blogsRouter.get('/', async (request, response) => {
     response.json(blogs)
 })
   
+
 blogsRouter.post('/', async (request, response) => {
 
   if (!request.body.title || !request.body.url) {
@@ -31,7 +32,7 @@ blogsRouter.post('/', async (request, response) => {
   }
 
   try {
-    /*
+    
     const token = getTokenFrom(request)
     const decodedToken = jwt.verify(token, process.env.SECRET)
 
@@ -40,8 +41,8 @@ blogsRouter.post('/', async (request, response) => {
     }
 
     const user = await User.findById(decodedToken.id)
-    */
-    const user = await User.findOne({})
+    
+    //const user = await User.findOne({})
     //console.log("user", user)
     request.body.user = user._id
 
@@ -63,7 +64,6 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.put('/:id', async (request, response) => {
-  //const body = request.body
   const oldBlog = await Blog.findById(request.params.id)
   const blog = {likes: oldBlog.likes + 1}
   
