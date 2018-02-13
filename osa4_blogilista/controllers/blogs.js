@@ -31,6 +31,7 @@ blogsRouter.post('/', async (request, response) => {
   }
 
   try {
+    /*
     const token = getTokenFrom(request)
     const decodedToken = jwt.verify(token, process.env.SECRET)
 
@@ -39,6 +40,9 @@ blogsRouter.post('/', async (request, response) => {
     }
 
     const user = await User.findById(decodedToken.id)
+    */
+    const user = await User.findOne({})
+    console.log("user", user)
     request.body.user = user._id
 
     const blog = new Blog(request.body)
@@ -53,7 +57,7 @@ blogsRouter.post('/', async (request, response) => {
       response.status(401).json({ error: exception.message })
     } else {
       console.log(exception)
-      response.status(500).json({ error: 'something went wrong...' })
+      response.status(500).json({ error: exception })
     }
   }
 })

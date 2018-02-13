@@ -1,7 +1,9 @@
 const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
+const bcrypt = require('bcrypt')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const initialBlogs = [
   {
@@ -24,8 +26,25 @@ const initialBlogs = [
   }
 ]
 
+const createUser = async () => {
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash("testuser1", saltRounds)
+
+  const user = new User({
+    username: "testuser",
+    name: "Test User",
+    adult: true,
+    passwordHash
+  })
+
+  await user.save()
+}
+
 beforeAll(async () => {
   await Blog.remove({})
+  await User.remove({})
+  await createUser()  
+
   const blogObjs = initialBlogs.map(blog => new Blog(blog))
   const promiseArr = blogObjs.map(blog => blog.save())
   await Promise.all(promiseArr)
