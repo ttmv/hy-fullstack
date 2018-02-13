@@ -9,11 +9,24 @@ usersRouter.get('/', async (request, response) => {
   response.json(users)
 })
 
-
-
 usersRouter.post('/', async (request, response) => {
   try {
     const body = request.body
+    
+    if (!body.password || body.password.length < 3) {
+      return response
+        .status(400)
+        .json({error: "password must be at least 3 characters"})
+    }
+
+    const prevUser = await User.findOne({'username': body.username})
+
+    if(!body.username || prevUser) {
+      return response
+        .status(400)
+        .json({error: "username already in use"})
+    }
+
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
     const user = new User({
@@ -31,7 +44,6 @@ usersRouter.post('/', async (request, response) => {
     response.status(500).json({error: err})
   }
 })
-
 
 
 module.exports = usersRouter

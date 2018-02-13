@@ -23,8 +23,23 @@ const initialBlogs = [
   }
 ]
 
+const addNewUser = async (name, username, passwd) => {
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(passwd, saltRounds)
+
+  const user = new User({
+    username: username,
+    name: name,
+    adult: true,
+    passwordHash
+  })
+
+  await user.save()
+  
+}
 
 const createUser = async () => {
+  //await addNewUser("Test User", "testuser", "testuser666")
   const saltRounds = 10
   const passwordHash = await bcrypt.hash("testuser1", saltRounds)
 
@@ -43,4 +58,4 @@ const blogsInDb = async () => {
   return blogs
 }
 
-module.exports = { initialBlogs, createUser ,blogsInDb}
+module.exports = {initialBlogs, createUser, blogsInDb }

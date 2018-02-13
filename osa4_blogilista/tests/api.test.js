@@ -21,6 +21,7 @@ describe('When some blogs are initially saved', async () => {
       .expect('Content-Type', /application\/json/)
   })
 
+  
   test('all blogs are returned', async () => {
     const existingBlogs = await blogsInDb()    
     const resp = await api.get('/api/blogs')
@@ -46,6 +47,7 @@ describe('When some blogs are initially saved', async () => {
     const blogsAfterDelete = await blogsInDb()
     expect(blogsAfterDelete.length).toBe(blogsBeforeDelete.length - 1)   
   })
+  
 })
 
 describe('When adding new blogs', () => {
@@ -76,7 +78,6 @@ describe('When adding new blogs', () => {
     expect(blogTitles).toContain("Type wars")
   })
 
-  
   test('when likes is not given it is set to 0', async () => {
     const newBlog = {
       title: "First class tests",
@@ -90,8 +91,9 @@ describe('When adding new blogs', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
   
-    const resp = await api.get('/api/blogs')
-    const added = resp.body.find(b => b.title === newBlog.title)
+    const blogsAfterAdd = await blogsInDb()
+    const added = blogsAfterAdd.find(b => b.title === newBlog.title)
+
     expect(added.likes).toBe(0)
   })
 
@@ -108,13 +110,13 @@ describe('When adding new blogs', () => {
       .send(newBlog)
       .expect(400)
 
-    const allBlogs = await api.get('/api/blogs/')  
-    const authors = allBlogs.body.map(b => b.author)
+    const allBlogs = await blogsInDb()  
+    const authors = allBlogs.map(b => b.author)
 
     expect(authors).not.toContain("Blogger without url")
-    expect(allBlogs.body.length).toBe(blogsBefore.length)
+    expect(allBlogs.length).toBe(blogsBefore.length)
   })
-
+  
   test('blog without title is not added', async () => {
     const blogsBefore = await blogsInDb()
     const newBlog = {
@@ -127,15 +129,94 @@ describe('When adding new blogs', () => {
       .send(newBlog)
       .expect(400)
 
-    const allBlogs = await api.get('/api/blogs/')
-    const authors = allBlogs.body.map(b => b.author)
+    const allBlogs = await blogsInDb()
+    const authors = allBlogs.map(b => b.author)
 
     expect(authors).not.toContain("Blogger without titles")
-    expect(allBlogs.body.length).toBe(blogsBefore.length)
+    expect(allBlogs.length).toBe(blogsBefore.length)
+  })
+
+})
+
+describe('Adding users', async () => {
+  beforeAll(async () => {
+    await User.remove({})
+  })
+
+  test('A valid user is added with POST to /api/users', async () => {
+    const newUser = {
+      name: "Asdf Argh",
+      username: "asdfargh",
+      password: "asdfargh666",
+      adult: true
+    }
+    
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+
+    const resp = await api.get('/api/users')
+    expect(resp.body.find(u => u.name === newUser.name)).not.toBeFalsy()
+  })
+
+  test('User with too short password is not added', async () => {
+    const newUser = {
+      name: "Test User",
+      username: "testuser",
+      password: "t",
+      adult: true
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    expect(result.error.text)
+      .toContain("password must be at least 3 characters")    
+  })
+
+
+  test('User without unique username is not added', async () => {
+    const newUser1 = {
+      name: "Test User",
+      username: "testuser",
+      password: "password",
+    }
+
+    const newUser2 = {
+      name: "Test User 2",
+      username: "testuser",
+      password: "password",
+    }
+
+    await api.post('/api/users').send(newUser1)
+  
+    const result = await api
+      .post('/api/users')
+      .send(newUser2)
+      .expect(400)
+
+    expect(result.error.text)
+      .toContain("username already in use")
+  })
+
+  test('User is set as adult if not specified', async () => {
+    const newUser = {
+      name: "Test User",
+      username: "testadult",
+      password: "password",
+    }
+  
+    const result = await api.post('/api/users').send(newUser)
+    expect(result.body.adult).toBe(true) 
   })
 })
 
 
+
 afterAll(() => {
+  console.log("blog test close server")
   server.close()
 })
