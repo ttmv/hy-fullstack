@@ -16,10 +16,10 @@
     "dotenv": "^5.0.0",
     "express": "^4.16.2",
     "jsonwebtoken": "^8.1.1",
-    "mongoose": "^5.0.3"
+    "mongoose": "^5.0.4"
   },
   "devDependencies": {
-    "jest": "^22.2.1",
+    "jest": "^22.2.2",
     "nodemon": "^1.14.12",
     "supertest": "^3.0.0"
   }

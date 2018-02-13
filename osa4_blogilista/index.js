@@ -17,7 +17,6 @@ const tokenExtractor = (request, response, next) => {
   next()
 }
 
-
 mongoose.connect(config.mongoUrl)
 mongoose.Promise = global.Promise
 
