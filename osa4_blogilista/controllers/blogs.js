@@ -4,12 +4,25 @@ const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
 
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7)
+const findUser = async (request, response) => {
+  try {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+    if (!request.token || !decodedToken.id) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    const user = await User.findById(decodedToken.id)
+    return user
+  } catch (exception) {
+    console.log(exception)
+    if (exception.name === 'JsonWebTokenError' ) {
+      response.status(401).json({ error: exception.message })
+    } else {
+      console.log(exception)
+      response.status(500).json({ error: exception })
+    }  
   }
-  return null
 }
 
 blogsRouter.get('/', async (request, response) => {
@@ -32,18 +45,7 @@ blogsRouter.post('/', async (request, response) => {
   }
 
   try {
-    
-    //const token = getTokenFrom(request)
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-    if (!request.token || !decodedToken.id) {
-      return response.status(401).json({ error: 'token missing or invalid' })
-    }
-
-    const user = await User.findById(decodedToken.id)
-    
-    //const user = await User.findOne({})
-    //console.log("user", user)
+    const user = await findUser(request, response)
     request.body.user = user._id
 
     const blog = new Blog(request.body)
@@ -64,16 +66,30 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.put('/:id', async (request, response) => {
-  const oldBlog = await Blog.findById(request.params.id)
-  const blog = {likes: oldBlog.likes + 1}
+  try{
+    const oldBlog = await Blog.findById(request.params.id)
+    const blog = {likes: oldBlog.likes + 1}
   
-  const updatedB = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true } )
-  response.status(201).json(updatedB)
+    const updatedB = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true } )
+    response.status(201).json(updatedB)
+  } catch(e) {
+    console.log(e)
+    response.status(400).send({ error: 'malformatted id' })
+  }
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
   try {
+    const user = await findUser(request, response)
+    
+    if (user.blogs.indexOf(request.params.id) < 0) {
+      return response.status(403).send({ error: 'Blog added by someone else' })
+    }
+    
     await Blog.findByIdAndRemove(request.params.id)
+    user.blogs = user.blogs.filter(b => b!=request.params.id)
+    await user.save()
+    
     response.status(204).end()
   } catch(e) {
     console.log(e)
