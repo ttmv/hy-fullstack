@@ -13,15 +13,14 @@ class Togglable extends React.Component {
   }
 
   render() {
-    const showWhenVisible = { display: this.state.visible ? '' : 'none' }
+    //const showWhenVisible = { display: this.state.visible ? '' : 'none' }
+    const children = this.state.visible ? <div>{this.props.children}</div> : ''
     const label = this.state.visible ? this.props.closeLabel : this.props.openLabel
 
     return (
       <div>
         <button onClick={this.toggleVisibility} style={this.props.style}>{label}</button>
-        <div style={showWhenVisible}>
-          {this.props.children}
-        </div>
+        {children}
       </div>
     )
   }

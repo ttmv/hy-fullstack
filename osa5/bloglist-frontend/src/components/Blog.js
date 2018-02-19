@@ -8,7 +8,7 @@ const BlogInfo = ({blog, updateBlog, deleteBlog}) => {
     <button onClick={deleteBlog(blog)}>Delete</button> : ''  
 
   return (
-    <div>
+    <div className="bloginfo">
       <div>{blog.url}</div> 
       <div>
         {blog.likes} likes
@@ -19,7 +19,6 @@ const BlogInfo = ({blog, updateBlog, deleteBlog}) => {
     </div>
   )
 }
-
 
 const Blog = ({ blog, updateBlog, deleteBlog }) => {
   const blogStyle = {
@@ -37,7 +36,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
 
   const label = `${blog.title} ${blog.author}`
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blogtitle">
       <Togglable openLabel={label} closeLabel={label} style={buttonStyle}>
         <BlogInfo blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog}/>
       </Togglable>  
