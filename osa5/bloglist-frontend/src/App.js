@@ -1,15 +1,17 @@
 import React from 'react'
+import Notification from './components/Notification'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       blogs: [],
-      error: '',
+      notification: '',
       username: '',
       password: '',
       user: null,
@@ -30,9 +32,19 @@ class App extends React.Component {
     }
   } 
 
+  msgTimeout = () => {
+    setTimeout(() => {
+      this.setState({ notification: null})
+    }, 5000)
+  }
+
   newBlog = (blog) => {
     const blogs = this.state.blogs.concat(blog)
-    this.setState({ blogs })  
+    this.setState({ 
+      blogs, 
+      notification: `blog ${blog.title} by ${blog.author} added`    
+    })
+    this.msgTimeout()
   }   
 
   login = async (event) => {
@@ -53,7 +65,13 @@ class App extends React.Component {
       this.setState({ username: '', password: '', user: data.token, loggedAs: data.name })
     } catch (exception) {
       console.log(exception)
-    }
+      this.setState({
+        notification: 'käyttäjätunnus tai salasana virheellinen',
+        username: '', password: ''
+      })
+
+      this.msgTimeout()
+    }  
   }
 
   logout = () => {
@@ -113,7 +131,8 @@ class App extends React.Component {
     )
 
     return (
-      <div>        
+      <div>
+        <Notification message={this.state.notification} />        
         {!this.state.user && loginForm()}
         {this.state.user && blogview()}        
       </div>
