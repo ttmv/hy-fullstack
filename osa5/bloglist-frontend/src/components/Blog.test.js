@@ -3,7 +3,7 @@ import { shallow, mount } from 'enzyme'
 import Blog from './Blog'
 import Togglable from './Togglable';
 
-describe.only('<Blog />', () => {
+describe('<Blog />', () => {
   let blogComponent
   let blog
 
