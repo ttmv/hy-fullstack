@@ -1,5 +1,6 @@
 import React from 'react'
 import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -25,9 +26,15 @@ class App extends React.Component {
     const userToken = window.localStorage.getItem('userToken')
 
     if (loggedAs && userToken) {
+      blogService.setToken(userToken)
       this.setState({ user: userToken, loggedAs })
     }
   } 
+
+  newBlog = (blog) => {
+    const blogs = this.state.blogs.concat(blog)
+    this.setState({ blogs })  
+  }   
 
   login = async (event) => {
     event.preventDefault()
@@ -39,9 +46,11 @@ class App extends React.Component {
         password: this.state.password
       })
 
+      blogService.setToken(data.token)
+
       window.localStorage.setItem('userToken', data.token)
       window.localStorage.setItem('loggedAs', data.name)
-      
+
       this.setState({ username: '', password: '', user: data.token, loggedAs: data.name })
     } catch (exception) {
       console.log(exception)
@@ -77,6 +86,7 @@ class App extends React.Component {
           <label htmlFor="password">password</label>
           <input
             type="password"
+            id="password"
             name="password"
             value={this.state.password}
             onChange={this.handleLoginFieldChange}
@@ -90,9 +100,12 @@ class App extends React.Component {
     const blogview = () => (
       <div>
         <h2>Blogs</h2>
+
         <div>
           Logged in as {this.state.loggedAs} 
           <button onClick={this.logout}>log out</button> 
+
+        <BlogForm addToList={this.newBlog}/>
         </div>  
         {this.state.blogs.map(blog => 
           <Blog key={blog._id} blog={blog}/>
@@ -103,7 +116,7 @@ class App extends React.Component {
     return (
       <div>        
         {!this.state.user && loginForm()}
-        {this.state.user && blogview()}
+        {this.state.user && blogview()}        
       </div>
     );
   }
