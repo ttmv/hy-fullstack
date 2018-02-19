@@ -1,20 +1,15 @@
 import React from 'react'
 import blogService from '../services/blogs'
-
+import PropTypes from 'prop-types'
 
 class BlogForm extends React.Component {
   constructor(props) {
-    console.log(props)
     super(props)
     this.state = {
       author: '',
       title: '',
       url: ''
     }
-  }
-
-  componentDidMount() {
-    console.log(this.props)
   }
 
   handleLoginFieldChange = (event) => {
@@ -79,6 +74,10 @@ class BlogForm extends React.Component {
     )
   }
   
+}
+
+BlogForm.propTypes = {
+  addToList: PropTypes.func.isRequired
 }
 
 export default BlogForm
