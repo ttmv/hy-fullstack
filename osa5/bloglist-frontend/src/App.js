@@ -40,6 +40,7 @@ class App extends React.Component {
   }
 
   newBlog = (blog) => {
+    this.blogForm.toggleVisibility()
     const blogs = this.state.blogs.concat(blog)
     this.setState({ 
       blogs, 
@@ -122,7 +123,7 @@ class App extends React.Component {
         <div>
           Logged in as {this.state.loggedAs} 
           <button onClick={this.logout}>log out</button> 
-          <Togglable buttonLabel="new blog">
+          <Togglable openLabel="new blog" closeLabel="cancel" ref={component => this.blogForm = component}>
             <BlogForm addToList={this.newBlog}/>
           </Togglable>
         </div>  

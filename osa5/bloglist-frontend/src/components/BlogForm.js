@@ -18,7 +18,7 @@ class BlogForm extends React.Component {
 
   addBlog = async (event) => {
     event.preventDefault()
-
+    
     const newBlog = {
       author: this.state.author,
       title: this.state.title,
@@ -26,7 +26,7 @@ class BlogForm extends React.Component {
     }
 
     this.setState({ author: '', title: '', url: ''})
-    
+
     try {
       const resp = await blogService.create(newBlog)
       this.props.addToList(resp)
