@@ -24,7 +24,6 @@ class App extends React.Component {
 
     const loggedAs = window.localStorage.getItem('loggedAs')
     const userToken = window.localStorage.getItem('userToken')
-
     if (loggedAs && userToken) {
       blogService.setToken(userToken)
       this.setState({ user: userToken, loggedAs })
