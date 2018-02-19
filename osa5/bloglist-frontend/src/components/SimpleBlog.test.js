@@ -3,7 +3,7 @@ import { shallow } from 'enzyme'
 import SimpleBlog from './SimpleBlog'
 
 describe('<SimpleBlog />', () => {
-  it('does something', () => {
+  it('renders blog author, title and likes', () => {
     const blog = {
       author: "testiauthor",
       title: "testititle",
