@@ -46,12 +46,29 @@ class App extends React.Component {
       blogs, 
       notification: `blog ${blog.title} by ${blog.author} added`    
     })
+
     this.msgTimeout()
   }   
 
+  updateBlog = (blog) => {
+    return async () => {
+      console.log(blog)
+      const data = {
+        user: blog.user._id,
+        likes: blog.likes,
+        author: blog.author,
+        title: blog.title,
+        url: blog.url
+      }
+
+      const updated = await blogService.update(blog._id, data)
+      const blogs = this.state.blogs.filter(b => b._id !== updated._id)
+      this.setState({ blogs: blogs.concat(updated) })
+    }
+  }
+
   login = async (event) => {
     event.preventDefault()
-    console.log('login in with', this.state.username, this.state.password)
 
     try {
       const data = await loginService.login({
@@ -111,10 +128,13 @@ class App extends React.Component {
             onChange={this.handleLoginFieldChange}
           />
         </div>
-        <button type="sbumit">kirjaudu</button>
+        <button type="submit">kirjaudu</button>
       </form>
     </div>
     )
+
+    const allBlogs = this.state.blogs.slice()
+    allBlogs.sort(function(a,b){return b.likes - a.likes})
 
     const blogview = () => (
       <div>
@@ -127,8 +147,8 @@ class App extends React.Component {
             <BlogForm addToList={this.newBlog}/>
           </Togglable>
         </div>  
-        {this.state.blogs.map(blog => 
-          <Blog key={blog._id} blog={blog}/>
+        {allBlogs.map(blog => 
+          <Blog key={blog._id} blog={blog} updateBlog={this.updateBlog}/>
         )}
       </div>
     )
