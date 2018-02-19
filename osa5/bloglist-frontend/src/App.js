@@ -12,7 +12,7 @@ class App extends React.Component {
       username: '',
       password: '',
       user: null,
-      usersname: ''
+      loggedAs: ''
     }
   }
 
@@ -20,6 +20,13 @@ class App extends React.Component {
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
     )
+
+    const loggedAs = window.localStorage.getItem('loggedAs')
+    const userToken = window.localStorage.getItem('userToken')
+
+    if (loggedAs && userToken) {
+      this.setState({ user: userToken, loggedAs })
+    }
   } 
 
   login = async (event) => {
@@ -32,10 +39,19 @@ class App extends React.Component {
         password: this.state.password
       })
 
-      this.setState({ username: '', password: '', user: data.token, usersname: data.name })
+      window.localStorage.setItem('userToken', data.token)
+      window.localStorage.setItem('loggedAs', data.name)
+      
+      this.setState({ username: '', password: '', user: data.token, loggedAs: data.name })
     } catch (exception) {
       console.log(exception)
     }
+  }
+
+  logout = () => {
+    this.setState({ user: null, loggedAs: '' })
+    window.localStorage.removeItem('userToken')
+    window.localStorage.removeItem('loggedAs')
   }
 
   handleLoginFieldChange = (event) => {
@@ -75,7 +91,8 @@ class App extends React.Component {
       <div>
         <h2>Blogs</h2>
         <div>
-          Logged in as {this.state.usersname}
+          Logged in as {this.state.loggedAs} 
+          <button onClick={this.logout}>log out</button> 
         </div>  
         {this.state.blogs.map(blog => 
           <Blog key={blog._id} blog={blog}/>
