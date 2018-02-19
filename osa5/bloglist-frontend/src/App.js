@@ -1,5 +1,6 @@
 import React from 'react'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
@@ -121,8 +122,9 @@ class App extends React.Component {
         <div>
           Logged in as {this.state.loggedAs} 
           <button onClick={this.logout}>log out</button> 
-
-        <BlogForm addToList={this.newBlog}/>
+          <Togglable buttonLabel="new blog">
+            <BlogForm addToList={this.newBlog}/>
+          </Togglable>
         </div>  
         {this.state.blogs.map(blog => 
           <Blog key={blog._id} blog={blog}/>
