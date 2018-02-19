@@ -3,6 +3,10 @@ import Togglable from './Togglable'
 
 const BlogInfo = ({blog, updateBlog, deleteBlog}) => {
   const addedBy = blog.user ? <div>added by {blog.user.name}</div> : <div></div> 
+  const username = window.localStorage.getItem('username')
+  const rm = (!blog.user || blog.user.username === username) ? 
+    <button onClick={deleteBlog(blog)}>Delete</button> : ''  
+
   return (
     <div>
       <div>{blog.url}</div> 
@@ -11,7 +15,7 @@ const BlogInfo = ({blog, updateBlog, deleteBlog}) => {
         <button onClick={updateBlog(blog)}>like</button>
       </div>
       {addedBy}
-      <button onClick={deleteBlog(blog)}>Delete</button>
+      {rm}
     </div>
   )
 }

@@ -52,7 +52,6 @@ class App extends React.Component {
 
   updateBlog = (blog) => {
     return async () => {
-      console.log(blog)
       const data = {
         user: blog.user._id,
         likes: blog.likes,
@@ -95,6 +94,7 @@ class App extends React.Component {
 
       window.localStorage.setItem('userToken', data.token)
       window.localStorage.setItem('loggedAs', data.name)
+      window.localStorage.setItem('username', data.username)
 
       this.setState({ username: '', password: '', user: data.token, loggedAs: data.name })
     } catch (exception) {
