@@ -1,8 +1,9 @@
-POST http://localhost:3001/api/blogs
+POST http://localhost:3003/api/blogs
 Content-Type: application/json
 //Authorization: Bearer ...
+
 {
-    "title": "Vielä lisää blogeja",
-    "author": "Joku author",
+    "title": "blogi ilman lisääjää 4",
+    "author": "Joku uusi author",
     "url": "http://url.com"
 }

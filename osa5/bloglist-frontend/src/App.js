@@ -67,6 +67,21 @@ class App extends React.Component {
     }
   }
 
+  deleteBlog = (blog) => {
+    return async () => {
+      const result = window.confirm(`delete ${blog.title} by ${blog.author}?`)
+      if(result) {
+        try {
+          await blogService.remove(blog._id)
+          const blogs = this.state.blogs.filter(b => b._id !== blog._id)
+          this.setState({ blogs })
+        } catch (exception) {
+          console.log(exception)
+        }
+      }
+    }
+  }
+
   login = async (event) => {
     event.preventDefault()
 
@@ -148,7 +163,7 @@ class App extends React.Component {
           </Togglable>
         </div>  
         {allBlogs.map(blog => 
-          <Blog key={blog._id} blog={blog} updateBlog={this.updateBlog}/>
+          <Blog key={blog._id} blog={blog} updateBlog={this.updateBlog} deleteBlog={this.deleteBlog}/>
         )}
       </div>
     )

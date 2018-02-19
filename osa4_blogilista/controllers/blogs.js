@@ -80,6 +80,12 @@ blogsRouter.put('/:id', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
   try {
+    const blog = await Blog.findById(request.params.id)
+    if(!blog.user) {
+      await Blog.findByIdAndRemove(request.params.id)
+      return response.status(204).end()  
+    }
+
     const user = await findUser(request, response)
     
     if (user.blogs.indexOf(request.params.id) < 0) {

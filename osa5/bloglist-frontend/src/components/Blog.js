@@ -1,19 +1,23 @@
 import React from 'react'
 import Togglable from './Togglable'
 
-const BlogInfo = ({blog, updateBlog}) => (
-  <div>
-    <div>{blog.url}</div> 
+const BlogInfo = ({blog, updateBlog, deleteBlog}) => {
+  const addedBy = blog.user ? <div>added by {blog.user.name}</div> : <div></div> 
+  return (
     <div>
-      {blog.likes} likes
-      <button onClick={updateBlog(blog)}>like</button>
+      <div>{blog.url}</div> 
+      <div>
+        {blog.likes} likes
+        <button onClick={updateBlog(blog)}>like</button>
+      </div>
+      {addedBy}
+      <button onClick={deleteBlog(blog)}>Delete</button>
     </div>
-    <div>added by {blog.user.name}</div>
-  </div>
-)
+  )
+}
 
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog }) => {
   const blogStyle = {
     paddingTop: 3,
     paddingLeft: 2,
@@ -31,7 +35,7 @@ const Blog = ({ blog, updateBlog }) => {
   return (
     <div style={blogStyle}>
       <Togglable openLabel={label} closeLabel={label} style={buttonStyle}>
-        <BlogInfo blog={blog} updateBlog={updateBlog}/>
+        <BlogInfo blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog}/>
       </Togglable>  
     </div>  
   )    
