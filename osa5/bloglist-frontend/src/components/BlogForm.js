@@ -70,7 +70,7 @@ class BlogForm extends React.Component {
           onChange={this.handleLoginFieldChange}
         />
       </div>
-      <button type="sbumit">create</button>
+      <button type="submit">create</button>
     </form>
 
     )
