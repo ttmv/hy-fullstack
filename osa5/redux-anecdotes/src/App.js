@@ -3,12 +3,13 @@ import React from 'react';
 
 class App extends React.Component {
   vote = (id) => () => {
-    console.log(id)
     this.props.store.dispatch({ type: 'VOTE', data: {id }})
   }
 
   render() {
-    const anecdotes = this.props.store.getState()
+    const anecdotes = this.props.store.getState().slice()
+    anecdotes.sort((a1, a2) => a1.votes < a2.votes)
+
     return (
       <div>
         <h2>Anecdotes</h2>
