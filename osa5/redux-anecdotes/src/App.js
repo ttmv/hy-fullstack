@@ -6,6 +6,20 @@ class App extends React.Component {
     this.props.store.dispatch({ type: 'VOTE', data: {id }})
   }
 
+  addNew = (event) => {
+    event.preventDefault()
+    console.log(event.target.anecdote.value)
+    this.props.store.dispatch({
+      type: 'ADD_ANECDOTE',
+      data: {
+        content: event.target.anecdote.value,
+        votes: 0
+      }
+    })
+
+    event.target.anecdote.value = ''
+  }
+
   render() {
     const anecdotes = this.props.store.getState().slice()
     anecdotes.sort((a1, a2) => a1.votes < a2.votes)
@@ -25,8 +39,8 @@ class App extends React.Component {
           </div>
         )}
         <h2>create new</h2>
-        <form>
-          <div><input /></div>
+        <form onSubmit={this.addNew}>
+          <div><input name="anecdote"/></div>
           <button>create</button> 
         </form>
       </div>
