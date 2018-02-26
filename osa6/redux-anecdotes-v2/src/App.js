@@ -3,8 +3,16 @@ import Notification from './components/Notification'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Filter from './components/filter'
+import { notificationSetting } from './reducers/notificationReducer'
 
 class App extends React.Component {
+  setNotification = (notification) => {
+    this.props.store.dispatch(notificationSetting(notification))
+
+    setTimeout(() => {
+      this.props.store.dispatch(notificationSetting(''))
+    }, 5000)
+  }
 
   render() {
     //const anecdotes = this.props.store.getState()
@@ -13,8 +21,10 @@ class App extends React.Component {
         <h1>Programming anecdotes</h1>
         <Notification store={this.props.store}/>
         <Filter store={this.props.store}/>        
-        <AnecdoteList store={this.props.store} />
-        <AnecdoteForm store={this.props.store} />
+        <AnecdoteList store={this.props.store} 
+          setNotification={this.setNotification}/>
+        <AnecdoteForm store={this.props.store} 
+          setNotification={this.setNotification}/>
       </div>
     )
   }
