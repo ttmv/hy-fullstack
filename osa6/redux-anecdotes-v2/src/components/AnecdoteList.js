@@ -9,7 +9,6 @@ class AnecdoteList extends React.Component {
     return async () => {
       await this.props.voting(a)
       this.props.notify(`you voted "${a.content}"`, 3500)
-      //this.props.setNotification(`you voted "${a.content}"`)
     }
   }
 
