@@ -3,8 +3,17 @@ import Notification from './components/Notification'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import { notificationSetting } from './reducers/notificationReducer'
+import { connect } from 'react-redux'
+import { anecdoteInitialization } from './reducers/anecdoteReducer'
+import anecdoteService from './services/anecdotes'
 
 class App extends React.Component {
+  componentDidMount = async () => {
+    const anecdotes = await anecdoteService.getAll()
+    console.log(anecdotes)
+    this.props.anecdoteInitialization(anecdotes)
+  }
+
   setNotification = (notification) => {
     this.props.store.dispatch(notificationSetting(notification))
 
@@ -25,4 +34,4 @@ class App extends React.Component {
   }
 }
 
-export default App
+export default connect(null, { anecdoteInitialization })(App)
