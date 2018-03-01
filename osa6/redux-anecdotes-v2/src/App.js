@@ -9,16 +9,14 @@ import anecdoteService from './services/anecdotes'
 
 class App extends React.Component {
   componentDidMount = async () => {
-    //const anecdotes = await anecdoteService.getAll()
-    //this.props.anecdoteInitialization(anecdotes)
     this.props.initializeAnecdotes()
   }
 
   setNotification = (notification) => {
-    this.props.store.dispatch(notificationSetting(notification))
+    this.props.notificationSetting(notification)
 
     setTimeout(() => {
-      this.props.store.dispatch(notificationSetting(''))
+      this.props.notificationSetting('')
     }, 5000)
   }
 
@@ -34,4 +32,4 @@ class App extends React.Component {
   }
 }
 
-export default connect(null, { initializeAnecdotes })(App)
+export default connect(null, { initializeAnecdotes, notificationSetting })(App)
