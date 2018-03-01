@@ -20,11 +20,10 @@ class App extends React.Component {
       <div>
         <h1>Programming anecdotes</h1>
         <Notification />
-        <Filter store={this.props.store}/>        
+        <Filter />        
         <AnecdoteList store={this.props.store} 
           setNotification={this.setNotification}/>
-        <AnecdoteForm store={this.props.store} 
-          setNotification={this.setNotification}/>
+        <AnecdoteForm setNotification={this.setNotification}/>
       </div>
     )
   }
