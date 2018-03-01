@@ -1,8 +1,7 @@
 import React from 'react'
 import { anecdoteCreation } from '../reducers/anecdoteReducer'
+import { notify } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
-import anecdoteService from '../services/anecdotes'
-
 
 class AnecdoteForm extends React.Component {
   handleSubmit = async (e) => {
@@ -10,7 +9,7 @@ class AnecdoteForm extends React.Component {
     const content = e.target.anecdotefield.value
     e.target.anecdotefield.value = ''
     await this.props.anecdoteCreation(content)
-    this.props.setNotification(`"${content}" added`)    
+    this.props.notify(`"${content}" added`, 3500)
   }
 
   render() {
@@ -27,5 +26,5 @@ class AnecdoteForm extends React.Component {
 }
 
 export default connect(
-  null, { anecdoteCreation }
+  null, { anecdoteCreation, notify }
 )(AnecdoteForm)

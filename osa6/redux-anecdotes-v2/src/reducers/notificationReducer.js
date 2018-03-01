@@ -15,4 +15,20 @@ export const notificationSetting = (notification) => {
   }
 }
 
+export const notify = (notification, time) => {
+  return async (dispatch) => {    
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      notification: notification        
+    })
+
+    setTimeout(()=> {
+      dispatch({
+        type: 'SET_NOTIFICATION',
+        notification: ''        
+      })        
+    }, time)
+  }
+}
+
 export default notificationReducer
