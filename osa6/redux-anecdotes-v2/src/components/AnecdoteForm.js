@@ -9,9 +9,7 @@ class AnecdoteForm extends React.Component {
     e.preventDefault()
     const content = e.target.anecdotefield.value
     e.target.anecdotefield.value = ''
-
-    const newAnecd = await anecdoteService.createNew(content)
-    this.props.anecdoteCreation(newAnecd)
+    await this.props.anecdoteCreation(content)
     this.props.setNotification(`"${content}" added`)    
   }
 

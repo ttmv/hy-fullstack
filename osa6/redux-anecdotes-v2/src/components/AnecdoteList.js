@@ -7,8 +7,8 @@ import anecdoteService from '../services/anecdotes'
 class AnecdoteList extends React.Component {
   handleClick = (a) => {
     return async () => {
-      await anecdoteService.updateVote(a)
-      this.props.voting(a.id)
+      //const updated = await anecdoteService.updateVote(a)
+      await this.props.voting(a)
       this.props.setNotification(`you voted "${a.content}"`)
     }
   }
