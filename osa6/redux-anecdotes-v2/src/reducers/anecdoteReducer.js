@@ -1,3 +1,5 @@
+import anecdoteService from '../services/anecdotes'
+
 const anecdoteReducer = (state = [], action) => {
   if (action.type==='VOTE') {
     const old = state.filter(a => a.id !==action.id)
@@ -17,10 +19,13 @@ const anecdoteReducer = (state = [], action) => {
   return state
 }
 
-export const anecdoteInitialization = (data) => {
-  return {
-    type: 'INIT_ANCEDOTES',
-    data
+export const initializeAnecdotes = () => {
+  return async (dispatch) => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch({
+      type: 'INIT_ANCEDOTES',
+      data: anecdotes
+    })
   }
 }
 
