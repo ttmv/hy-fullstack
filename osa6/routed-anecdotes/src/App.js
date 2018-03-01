@@ -22,9 +22,18 @@ const AnecdoteList = ({ anecdotes }) => (
   </div>
 )
 
-const Notification = ({ notification }) => (
-  <div> {notification} </div>
-)
+const Notification = ({ notification }) => {
+  const style = {
+    color: 'green',
+    border: 'solid',
+    padding: '10px',
+    display: notification ? '' : 'none'
+  }
+    
+  return (
+    <div style={style}> {notification} </div>
+  )
+}
 
 const Anecdote = ({ anecdote }) => (
   <div>
