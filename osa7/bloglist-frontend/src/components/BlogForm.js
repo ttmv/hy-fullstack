@@ -1,6 +1,7 @@
 import React from 'react'
-import blogService from '../services/blogs'
-import PropTypes from 'prop-types'
+import { createBlog } from '../reducers/blogReducer'
+import { notify } from '../reducers/nofificationReducer'
+import { connect } from 'react-redux'
 
 class BlogForm extends React.Component {
   constructor(props) {
@@ -28,14 +29,13 @@ class BlogForm extends React.Component {
     this.setState({ author: '', title: '', url: ''})
 
     try {
-      const resp = await blogService.create(newBlog)
-      this.props.addToList(resp)
-
+      this.props.createBlog(newBlog)
+      this.props.notify(`blog ${newBlog.title} by ${newBlog.author} added (maybe)`, 5000)
+      this.props.hide()
     } catch (exception) {
       console.log(exception)
     }
   }
-
 
   render() {
     return (
@@ -78,8 +78,4 @@ class BlogForm extends React.Component {
   
 }
 
-BlogForm.propTypes = {
-  addToList: PropTypes.func.isRequired
-}
-
-export default BlogForm
+export default connect(null, {notify, createBlog })(BlogForm)

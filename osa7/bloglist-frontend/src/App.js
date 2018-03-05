@@ -8,17 +8,16 @@ import Users from './components/Users'
 import User from './components/User'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { notify } from './reducers/nofificationReducer'
 import { connect } from 'react-redux'
-import { initializeUsers } from './reducers/userReducer'
 import { initBlogs } from './reducers/blogReducer'
+import { initializeUsers } from './reducers/userReducer'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      blogs: [],
       username: '',
       password: '',
       user: null,
@@ -27,10 +26,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    blogService.getAll().then(blogs =>
-      this.setState({ blogs })
-    )
-
     this.props.initBlogs()
     this.props.initializeUsers()
 
@@ -43,12 +38,8 @@ class App extends React.Component {
     }
   } 
 
-  newBlog = (blog) => {
+  hideForm = () => {
     this.blogForm.toggleVisibility()
-    const blogs = this.state.blogs.concat(blog)
-    this.setState({ blogs })
-    
-    this.props.notify(`blog ${blog.title} by ${blog.author} added`, 5000)
   }   
 
 
@@ -73,9 +64,6 @@ class App extends React.Component {
       this.setState({
         username: '', password: ''
       })
-
-
-      this.msgTimeout()
     }  
   }
 
@@ -87,10 +75,6 @@ class App extends React.Component {
 
   handleLoginFieldChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
-  }
-
-  blogById = (id) => {
-    return this.state.blogs.find(blog => blog._id === id)
   }
 
   render() {
@@ -123,8 +107,6 @@ class App extends React.Component {
     </div>
     )
 
-    const allBlogs = this.state.blogs.slice()
-    allBlogs.sort(function(a,b){return b.likes - a.likes})
 
     const blogview = () => (
       <div>
@@ -132,10 +114,10 @@ class App extends React.Component {
 
         <div>
           <Togglable openLabel="new blog" closeLabel="cancel" ref={component => this.blogForm = component}>
-            <BlogForm addToList={this.newBlog}/>
+            <BlogForm hide={this.hideForm}/>
           </Togglable>
         </div>  
-        <BlogList allblogs={allBlogs} />
+        <BlogList />
       </div>
     )
 

@@ -4,6 +4,8 @@ const blogReducer = (state = [], action) => {
   switch(action.type) {
     case 'INIT_BLOGS':
       return action.data
+    case 'CREATE_BLOG':
+      return [...state, action.data]
     case 'UPDATE_BLOG':
       const blogs = state.filter(b => b._id !== action.updated._id)
       return [...blogs, action.updated]
@@ -20,6 +22,16 @@ export const initBlogs = () => {
     dispatch({
       type: 'INIT_BLOGS',
       data: blogs
+    })
+  }
+}
+
+export const createBlog = (blog) => {
+  return async (dispatch) => {
+    const addedBlog = await blogService.create(blog)
+    dispatch({
+      type: 'CREATE_BLOG',
+      data: addedBlog
     })
   }
 }
