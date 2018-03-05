@@ -1,7 +1,9 @@
 import React from 'react'
 import Togglable from './Togglable'
 
-const BlogInfo = ({blog, updateBlog, deleteBlog}) => {
+export const BlogInfo = ({blog, updateBlog, deleteBlog}) => {
+  if(!blog) return null
+
   const addedBy = blog.user ? <div>added by {blog.user.name}</div> : <div></div> 
   const username = window.localStorage.getItem('username')
   const rm = (!blog.user || blog.user.username === username) ? 
@@ -9,6 +11,7 @@ const BlogInfo = ({blog, updateBlog, deleteBlog}) => {
 
   return (
     <div className="bloginfo">
+      <h2>{blog.title}</h2>
       <div>{blog.url}</div> 
       <div>
         {blog.likes} likes

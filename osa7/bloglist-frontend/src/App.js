@@ -1,7 +1,7 @@
 import React from 'react'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import Blog from './components/Blog'
+import Blog, { BlogInfo } from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Users from './components/Users'
 import User from './components/User'
@@ -33,6 +33,7 @@ class App extends React.Component {
 
     const loggedAs = window.localStorage.getItem('loggedAs')
     const userToken = window.localStorage.getItem('userToken')
+
     if (loggedAs && userToken) {
       blogService.setToken(userToken)
       this.setState({ user: userToken, loggedAs })
@@ -56,10 +57,11 @@ class App extends React.Component {
         title: blog.title,
         url: blog.url
       }
-
+      console.log("update")
       const updated = await blogService.update(blog._id, data)
-      const blogs = this.state.blogs.filter(b => b._id !== updated._id)
+      const blogs = this.state.blogs.filter(b => b._id !== updated._id)      
       this.setState({ blogs: blogs.concat(updated) })
+      console.log("updated")
     }
   }
 
@@ -115,8 +117,8 @@ class App extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
-  userById = (id) => {
-    return this.state.users.find(user => user._id === id)
+  blogById = (id) => {
+    return this.state.blogs.find(blog => blog._id === id)
   }
 
   render() {
@@ -162,7 +164,7 @@ class App extends React.Component {
           </Togglable>
         </div>  
         {allBlogs.map(blog => 
-          <Blog key={blog._id} blog={blog} updateBlog={this.updateBlog} deleteBlog={this.deleteBlog}/>
+          <Link to={`/blogs/${blog._id}`} key={blog._id}><Blog blog={blog} updateBlog={this.updateBlog} deleteBlog={this.deleteBlog}/></Link>
         )}
       </div>
     )
@@ -187,6 +189,11 @@ class App extends React.Component {
 
             <Route exact path="/users" render={() => <Users />} />
             <Route path="/users/:id" render={({match}) => <User userId={match.params.id} />} />
+            <Route path="/blogs/:id" render={({match}) => 
+              <BlogInfo blog={this.blogById(match.params.id)} 
+                updateBlog={this.updateBlog}
+                deleteBlog={this.deleteBlog}/>}
+              />
 
           </div>
         </Router>
