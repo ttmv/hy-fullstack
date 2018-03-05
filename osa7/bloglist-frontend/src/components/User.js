@@ -4,9 +4,7 @@ import { connect } from 'react-redux'
 
 
 const User = (props) => {
-  console.log(props)
   const { users, userId } = props
-  console.log(users, users.length)
   if (users.length === 0) return null
 
   const user = users.find(u => u._id === userId)

@@ -57,11 +57,10 @@ class App extends React.Component {
         title: blog.title,
         url: blog.url
       }
-      console.log("update")
+
       const updated = await blogService.update(blog._id, data)
       const blogs = this.state.blogs.filter(b => b._id !== updated._id)      
       this.setState({ blogs: blogs.concat(updated) })
-      console.log("updated")
     }
   }
 
