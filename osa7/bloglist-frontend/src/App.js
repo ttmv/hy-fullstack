@@ -7,7 +7,6 @@ import Users from './components/Users'
 import User from './components/User'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import userService from './services/users'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { notify } from './reducers/nofificationReducer'
 import { connect } from 'react-redux'
@@ -158,8 +157,6 @@ class App extends React.Component {
         <h2>Blogs</h2>
 
         <div>
-          Logged in as {this.state.loggedAs} 
-          <button onClick={this.logout}>log out</button> 
           <Togglable openLabel="new blog" closeLabel="cancel" ref={component => this.blogForm = component}>
             <BlogForm addToList={this.newBlog}/>
           </Togglable>
@@ -176,7 +173,9 @@ class App extends React.Component {
           <div>
             <div>
               <Link to="/">Blogs</Link>&nbsp;
-              <Link to="/users">Users</Link>
+              <Link to="/users">Users</Link>&nbsp;
+              Logged in as {this.state.loggedAs}&nbsp; 
+              <button onClick={this.logout}>log out</button> 
             </div> 
             <Route exact path="/" render={() => 
               <div>
