@@ -8,7 +8,8 @@ import User from './components/User'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import userService from './services/users'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+
 
 class App extends React.Component {
   constructor(props) {
@@ -184,6 +185,10 @@ class App extends React.Component {
       <div>
         <Router>
           <div>
+            <div>
+              <Link to="/">Blogs</Link>&nbsp;
+              <Link to="/users">Users</Link>
+            </div> 
             <Route exact path="/" render={() => 
               <div>
                 <Notification message={this.state.notification} />        
