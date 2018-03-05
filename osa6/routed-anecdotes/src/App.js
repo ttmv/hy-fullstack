@@ -1,14 +1,15 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Link, NavLink } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
 
 const Menu = () => {
   const activeStyle = {
-    backgroundColor: "#d090ff",
+    backgroundColor: "#b0b0ff",
     padding: "10px"
   } 
 
   const navStyle = {
-    backgroundColor: "#F09500",
+    backgroundColor: "#F0A500",
     padding: "10px"
   }
 
@@ -24,13 +25,17 @@ const Menu = () => {
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map(anecdote => 
-        <li key={anecdote.id} >
-          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
-        </li>
-      )}
-    </ul>  
+    <Table striped celled>
+      <Table.Body>
+        {anecdotes.map(anecdote => 
+          <Table.Row key={anecdote.id} >
+            <Table.Cell>
+              <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+            </Table.Cell>
+          </Table.Row>
+        )}
+      </Table.Body>
+    </Table>  
   </div>
 )
 
