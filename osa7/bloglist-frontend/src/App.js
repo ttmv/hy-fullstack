@@ -11,6 +11,7 @@ import userService from './services/users'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { notify } from './reducers/nofificationReducer'
 import { connect } from 'react-redux'
+import { initializeUsers } from './reducers/userReducer'
 
 class App extends React.Component {
   constructor(props) {
@@ -21,7 +22,6 @@ class App extends React.Component {
       password: '',
       user: null,
       loggedAs: '',
-      users: []
     }
   }
 
@@ -30,9 +30,7 @@ class App extends React.Component {
       this.setState({ blogs })
     )
 
-    userService.getAll().then(users =>
-      this.setState({ users })
-    )
+    this.props.initializeUsers()
 
     const loggedAs = window.localStorage.getItem('loggedAs')
     const userToken = window.localStorage.getItem('userToken')
@@ -100,7 +98,6 @@ class App extends React.Component {
     } catch (exception) {
       console.log(exception)
       this.setState({
-        //notification: 'käyttäjätunnus tai salasana virheellinen',
         username: '', password: ''
       })
 
@@ -188,8 +185,9 @@ class App extends React.Component {
                 {this.state.user && blogview()}                
               </div>            
             } />
-            <Route exact path="/users" render={() => <Users users={this.state.users} />} />
-            <Route path="/users/:id" render={({match}) => <User user={this.userById(match.params.id)} />} />
+
+            <Route exact path="/users" render={() => <Users />} />
+            <Route path="/users/:id" render={({match}) => <User userId={match.params.id} />} />
 
           </div>
         </Router>
@@ -199,4 +197,4 @@ class App extends React.Component {
   }
 }
 
-export default connect(null, {notify})(App);
+export default connect(null, {notify, initializeUsers })(App);

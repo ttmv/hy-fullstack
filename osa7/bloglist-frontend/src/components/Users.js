@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import User from '../components/User'
+import { connect } from 'react-redux'
 
 const Users = ({ users }) => {
   return (
@@ -26,4 +27,10 @@ const Users = ({ users }) => {
   )
 }
 
-export default Users
+const mapStateToProps = (state) => {
+  return {
+    users: state.users
+  }
+}
+
+export default connect(mapStateToProps)(Users)
