@@ -1,7 +1,8 @@
 import React from 'react'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import Blog, { BlogInfo } from './components/Blog'
+import BlogInfo from './components/BlogInfo'
+import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import Users from './components/Users'
 import User from './components/User'
@@ -11,6 +12,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { notify } from './reducers/nofificationReducer'
 import { connect } from 'react-redux'
 import { initializeUsers } from './reducers/userReducer'
+import { initBlogs } from './reducers/blogReducer'
 
 class App extends React.Component {
   constructor(props) {
@@ -29,6 +31,7 @@ class App extends React.Component {
       this.setState({ blogs })
     )
 
+    this.props.initBlogs()
     this.props.initializeUsers()
 
     const loggedAs = window.localStorage.getItem('loggedAs')
@@ -48,36 +51,6 @@ class App extends React.Component {
     this.props.notify(`blog ${blog.title} by ${blog.author} added`, 5000)
   }   
 
-  updateBlog = (blog) => {
-    return async () => {
-      const data = {
-        user: blog.user._id,
-        likes: blog.likes,
-        author: blog.author,
-        title: blog.title,
-        url: blog.url
-      }
-
-      const updated = await blogService.update(blog._id, data)
-      const blogs = this.state.blogs.filter(b => b._id !== updated._id)      
-      this.setState({ blogs: blogs.concat(updated) })
-    }
-  }
-
-  deleteBlog = (blog) => {
-    return async () => {
-      const result = window.confirm(`delete ${blog.title} by ${blog.author}?`)
-      if(result) {
-        try {
-          await blogService.remove(blog._id)
-          const blogs = this.state.blogs.filter(b => b._id !== blog._id)
-          this.setState({ blogs })
-        } catch (exception) {
-          console.log(exception)
-        }
-      }
-    }
-  }
 
   login = async (event) => {
     event.preventDefault()
@@ -162,9 +135,7 @@ class App extends React.Component {
             <BlogForm addToList={this.newBlog}/>
           </Togglable>
         </div>  
-        {allBlogs.map(blog => 
-          <Link to={`/blogs/${blog._id}`} key={blog._id}><Blog blog={blog} updateBlog={this.updateBlog} deleteBlog={this.deleteBlog}/></Link>
-        )}
+        <BlogList allblogs={allBlogs} />
       </div>
     )
 
@@ -189,11 +160,8 @@ class App extends React.Component {
             <Route exact path="/users" render={() => <Users />} />
             <Route path="/users/:id" render={({match}) => <User userId={match.params.id} />} />
             <Route path="/blogs/:id" render={({match}) => 
-              <BlogInfo blog={this.blogById(match.params.id)} 
-                updateBlog={this.updateBlog}
-                deleteBlog={this.deleteBlog}/>}
-              />
-
+              <BlogInfo blogId={match.params.id} />}
+            />
           </div>
         </Router>
                   
@@ -202,4 +170,4 @@ class App extends React.Component {
   }
 }
 
-export default connect(null, {notify, initializeUsers })(App);
+export default connect(null, {notify, initializeUsers, initBlogs })(App);
