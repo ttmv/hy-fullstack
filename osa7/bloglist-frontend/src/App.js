@@ -9,14 +9,14 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import userService from './services/users'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-
+import { notify } from './reducers/nofificationReducer'
+import { connect } from 'react-redux'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       blogs: [],
-      notification: '',
       username: '',
       password: '',
       user: null,
@@ -42,21 +42,12 @@ class App extends React.Component {
     }
   } 
 
-  msgTimeout = () => {
-    setTimeout(() => {
-      this.setState({ notification: null})
-    }, 5000)
-  }
-
   newBlog = (blog) => {
     this.blogForm.toggleVisibility()
     const blogs = this.state.blogs.concat(blog)
-    this.setState({ 
-      blogs, 
-      notification: `blog ${blog.title} by ${blog.author} added`    
-    })
-
-    this.msgTimeout()
+    this.setState({ blogs })
+    
+    this.props.notify(`blog ${blog.title} by ${blog.author} added`, 5000)
   }   
 
   updateBlog = (blog) => {
@@ -109,9 +100,10 @@ class App extends React.Component {
     } catch (exception) {
       console.log(exception)
       this.setState({
-        notification: 'käyttäjätunnus tai salasana virheellinen',
+        //notification: 'käyttäjätunnus tai salasana virheellinen',
         username: '', password: ''
       })
+
 
       this.msgTimeout()
     }  
@@ -191,7 +183,7 @@ class App extends React.Component {
             </div> 
             <Route exact path="/" render={() => 
               <div>
-                <Notification message={this.state.notification} />        
+                <Notification />        
                 {!this.state.user && loginForm()}
                 {this.state.user && blogview()}                
               </div>            
@@ -207,4 +199,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default connect(null, {notify})(App);
