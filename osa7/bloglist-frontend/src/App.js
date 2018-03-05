@@ -4,6 +4,7 @@ import Togglable from './components/Togglable'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Users from './components/Users'
+import User from './components/User'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import userService from './services/users'
@@ -125,6 +126,10 @@ class App extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
+  userById = (id) => {
+    return this.state.users.find(user => user._id === id)
+  }
+
   render() {
     const loginForm = () => (
       <div>
@@ -186,7 +191,9 @@ class App extends React.Component {
                 {this.state.user && blogview()}                
               </div>            
             } />
-            <Route path="/users" render={() => <Users users={this.state.users} />} />
+            <Route exact path="/users" render={() => <Users users={this.state.users} />} />
+            <Route path="/users/:id" render={({match}) => <User user={this.userById(match.params.id)} />} />
+
           </div>
         </Router>
                   
