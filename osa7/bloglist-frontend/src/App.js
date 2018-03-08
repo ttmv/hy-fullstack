@@ -12,6 +12,7 @@ import { notify } from './reducers/nofificationReducer'
 import { connect } from 'react-redux'
 import { initBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/userReducer'
+import { checkLogin } from './reducers/loginReducer'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 class App extends React.Component {
@@ -28,14 +29,16 @@ class App extends React.Component {
   componentDidMount() {
     this.props.initBlogs()
     this.props.initializeUsers()
+    this.props.checkLogin()
 
+    /*
     const loggedAs = window.localStorage.getItem('loggedAs')
     const userToken = window.localStorage.getItem('userToken')
 
     if (loggedAs && userToken) {
       blogService.setToken(userToken)
       this.setState({ user: userToken, loggedAs })
-    }
+    }*/
   } 
 
   hideForm = () => {
@@ -121,6 +124,13 @@ class App extends React.Component {
       </div>
     )
 
+    const loggedIn = () => (
+      <span>
+        Logged in as {this.props.loggedAs}&nbsp; 
+        <button onClick={this.logout}>log out</button> 
+      </span>
+    )
+
     return (
       <div>
         <Router>
@@ -128,14 +138,13 @@ class App extends React.Component {
             <div>
               <Link to="/">Blogs</Link>&nbsp;
               <Link to="/users">Users</Link>&nbsp;
-              Logged in as {this.state.loggedAs}&nbsp; 
-              <button onClick={this.logout}>log out</button> 
+              {this.props.loggedAs && loggedIn()}
             </div> 
             <Route exact path="/" render={() => 
               <div>
                 <Notification />        
-                {!this.state.user && loginForm()}
-                {this.state.user && blogview()}                
+                {!this.props.user && loginForm()}
+                {this.props.user && blogview()}                
               </div>            
             } />
 
@@ -152,4 +161,12 @@ class App extends React.Component {
   }
 }
 
-export default connect(null, {notify, initializeUsers, initBlogs })(App);
+const mapStateToProps = (state) => {
+  console.log(state)
+  return {
+    user: state.loginInfo.user,
+    loggedAs: state.loginInfo.loggedAs 
+  }
+}
+
+export default connect(mapStateToProps, {notify, initializeUsers, initBlogs, checkLogin })(App);

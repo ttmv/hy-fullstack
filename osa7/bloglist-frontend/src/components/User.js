@@ -8,6 +8,7 @@ const User = (props) => {
   if (users.length === 0) return null
 
   const user = users.find(u => u._id === userId)
+  console.log(user)
   return (  
     <div>
       <h2>{user.name}</h2>
