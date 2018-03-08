@@ -1,4 +1,3 @@
-import userService from '../services/users'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 
@@ -15,44 +14,47 @@ const loginReducer = (state=initialState, action) => {
   }
 }
 
-/*
-export const login = (username, passwd) => {
+const addLogin = (userToken, loggedAs, dispatch) => {
+  blogService.setToken(userToken)
+
+  dispatch({
+    type: 'LOGIN', 
+    data: { 
+      user: userToken,
+      loggedAs
+    }
+  })  
+}
+
+export const checkLogin = () => {
+  return async (dispatch) => {
+    const loggedAs = window.localStorage.getItem('loggedAs')
+    const userToken = window.localStorage.getItem('userToken')
+    if (loggedAs && userToken) {
+      addLogin(userToken, loggedAs, dispatch)
+    }
+  }
+}
+
+export const login = (username, password) => {
   return async (dispatch) => {
     const user = await loginService.login({ username, password })
-
-    blogService.setToken(user.token)
 
     window.localStorage.setItem('userToken', user.token)
     window.localStorage.setItem('loggedAs', user.name)
     window.localStorage.setItem('username', user.username)
 
-    dispatch({
-      type: 'LOGIN', 
-      data: { 
-        user: user.token,
-        loggedAs: user.name
-      }
-    })
+    addLogin(user.token, user.name, dispatch)
   }
 }
-*/
 
-export const checkLogin = () => {
-  console.log("checklogin?")
+export const logout = () => {
   return async (dispatch) => {
-    const loggedAs = window.localStorage.getItem('loggedAs')
-    const userToken = window.localStorage.getItem('userToken')
-    if (loggedAs && userToken) {
-      blogService.setToken(userToken)
-
-      dispatch({
-        type: 'LOGIN', 
-        data: { 
-          user: userToken,
-          loggedAs
-        }
-      })  
-    }
+    window.localStorage.removeItem('userToken')
+    window.localStorage.removeItem('loggedAs')
+    dispatch({
+      type: 'LOGOUT' 
+    })   
   }
 }
 
