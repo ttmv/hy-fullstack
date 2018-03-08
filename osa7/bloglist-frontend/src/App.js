@@ -12,7 +12,7 @@ import { connect } from 'react-redux'
 import { initBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/userReducer'
 import { checkLogin, logout } from './reducers/loginReducer'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 
 class App extends React.Component {
   componentDidMount() {
@@ -29,14 +29,24 @@ class App extends React.Component {
     this.props.logout()
   }
 
-  render() {
+  render() { 
+    const buttonStyle = {
+      //backgroundColor: '#f0e0ff',
+      color: '#0045F0',
+      border: 'solid',
+      backgroundColor: '#fffabc',
+      padding: '5px',
+      borderRadius: '2px',
+      borderWidth: '1px'
+    }
+
     const loginForm = () => <LoginForm />
     const blogview = () => (
       <div>
         <h2>Blogs</h2>
 
         <div>
-          <Togglable openLabel="new blog" closeLabel="cancel" ref={component => this.blogForm = component}>
+          <Togglable openLabel="new blog" closeLabel="cancel" style={buttonStyle} ref={component => this.blogForm = component}>
             <BlogForm hide={this.hideForm}/>
           </Togglable>
         </div>  
@@ -44,22 +54,47 @@ class App extends React.Component {
       </div>
     )
 
+
     const loggedIn = () => (
-      <span>
+      <span style={{position: 'absolute', right: '10px'}}>
         Logged in as {this.props.loggedAs}&nbsp; 
-        <button onClick={this.logout}>log out</button> 
+        <button onClick={this.logout} style={buttonStyle}>log out</button> 
       </span>
     )
+
+    const menubar = () => {
+      const activeStyle = {
+        color: '#000000',
+        //border: 'solid',        
+        backgroundColor: '#c0b0ff',
+        padding: '6px',
+        borderRadius: '2px',
+        margin: 'auto'
+      } 
+    
+      const navStyle = {
+        color: '#000000',
+        backgroundColor: "#9095F0",
+        borderRadius: '4px',
+        margin: 'auto',
+        padding: '7px'
+      }
+
+      return (      
+        <div style={navStyle}>
+          <NavLink exact to="/" activeStyle={activeStyle}>Blogs</NavLink>&nbsp;
+          <NavLink to="/users" activeStyle={activeStyle}>Users</NavLink>&nbsp;
+          {this.props.loggedAs && loggedIn()}
+        </div>
+      )  
+    }
+
 
     return (
       <div>
         <Router>
           <div>
-            <div>
-              <Link to="/">Blogs</Link>&nbsp;
-              <Link to="/users">Users</Link>&nbsp;
-              {this.props.loggedAs && loggedIn()}
-            </div> 
+            {menubar()}
             <Route exact path="/" render={() => 
               <div>
                 <Notification />        
