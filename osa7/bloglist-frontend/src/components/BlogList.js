@@ -7,7 +7,8 @@ const BlogList = ({blogs}) => {
   blogs.sort((a,b) => b.likes - a.likes)
   const style = {
     color: '#000000',
-    backgroundColor: '#f7f5f0'
+    backgroundColor: '#f7f5f0',
+    marginTop: '5px'
   }
 
   return (

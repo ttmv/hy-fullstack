@@ -8,8 +8,11 @@ const Notification = (props) => {
     borderWidth: '1px',
     color: 'green',
     width: '60%',
-    margin: '5px'
+    margin: '5px',
+    backgroundColor: '#efffdf',
+    padding: '4px'
   }
+  
   const { notification } = props
   if (notification) return (<div style={style}> {notification} </div>)
   return null

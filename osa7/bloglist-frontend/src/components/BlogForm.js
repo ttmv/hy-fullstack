@@ -38,10 +38,26 @@ class BlogForm extends React.Component {
   }
 
   render() {
+    const buttonStyle = {
+      color: '#0045F0',
+      border: 'solid',
+      backgroundColor: '#fffabc',
+      padding: '4px',
+      borderRadius: '2px',
+      borderWidth: '1px',
+    }
+
+    const labelStyle = {
+      display: 'inline-block',
+      width: '40px',
+      textAlign: 'left',
+      fontSize: '0.8em'
+    }
+
     return (
-      <form onSubmit={this.addBlog}>
+      <form onSubmit={this.addBlog} style={{padding: '1em'}}>
       <div>
-       <label htmlFor="author">Author</label>
+       <label htmlFor="author" style={labelStyle}>Author</label>
         <input 
           type="text"
           id="author"
@@ -51,7 +67,7 @@ class BlogForm extends React.Component {
         />
       </div>
       <div>
-        <label htmlFor="title">Title</label>
+        <label htmlFor="title" style={labelStyle}>Title</label>
         <input
           type="text"
           id="title"
@@ -61,7 +77,7 @@ class BlogForm extends React.Component {
         />
       </div>
       <div>
-        <label htmlFor="url">url</label>
+        <label htmlFor="url" style={labelStyle}>url</label>
         <input
           type="text"
           id="url"
@@ -70,7 +86,7 @@ class BlogForm extends React.Component {
           onChange={this.handleLoginFieldChange}
         />
       </div>
-      <button type="submit">create</button>
+      <button type="submit" style={buttonStyle}>create</button>
     </form>
 
     )

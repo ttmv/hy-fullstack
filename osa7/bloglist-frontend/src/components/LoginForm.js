@@ -33,13 +33,19 @@ class LoginForm extends React.Component {
   }
 
   render() {
+    const labelStyle = {
+      display: 'inline-block',
+      width: '70px',
+      textAlign: 'left',
+      fontSize: '0.9em'
+    }
 
     return (
       <div>
         <h2>Log in</h2>
         <form onSubmit={this.login}>
         <div>
-         <label htmlFor="username">username</label>
+         <label htmlFor="username" style={labelStyle}>username</label>
           <input 
             type="text"
             id="username"
@@ -49,7 +55,7 @@ class LoginForm extends React.Component {
           />
         </div>
         <div>
-          <label htmlFor="password">password</label>
+          <label htmlFor="password" style={labelStyle}>password</label>
           <input
             type="password"
             id="password"

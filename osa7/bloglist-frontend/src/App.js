@@ -31,7 +31,6 @@ class App extends React.Component {
 
   render() { 
     const buttonStyle = {
-      //backgroundColor: '#f0e0ff',
       color: '#0045F0',
       border: 'solid',
       backgroundColor: '#fffabc',
@@ -65,8 +64,7 @@ class App extends React.Component {
     const menubar = () => {
       const activeStyle = {
         color: '#000000',
-        //border: 'solid',        
-        backgroundColor: '#c0b0ff',
+        backgroundColor: '#c0c0ff',
         padding: '6px',
         borderRadius: '2px',
         margin: 'auto'
@@ -91,7 +89,7 @@ class App extends React.Component {
 
 
     return (
-      <div>
+      <div style={{margin: 'auto', width: '95%', fontFamily: 'Arial, Helvetica, sans-serif'}}>
         <Router>
           <div>
             {menubar()}
